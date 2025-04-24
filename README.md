@@ -12,7 +12,7 @@ This work is foundational to ensuring the safe and accountable use of machine le
 
 - [`llvm_ir_analyzer`](./llvm_ir_analyzer): Static IR-level scanner for unsafe memory patterns (Rust, LLVM IR).
 - [`mlir_audit_tool`](./mlir_audit_tool): MLIR dialect-aware audit tool for dynamic ops and layout violations (Rust, MLIR).
-- [BEP - SLSA interpreter] (./bep_slsa_interpreter/) Transformer that converts Bazel Build Event Protocol (BEP) data into SLSA provenance format for cryptographically verifiable build records (Rust).
+- [`bep_to_slsa`](./NLSAFE_integration_layer/provenance/bep_to_slsa): Transformer that converts Bazel Build Event Protocol (BEP) data into SLSA provenance format for cryptographically verifiable build records (Rust).
 
 ## 📊 Project Tracker
 
