@@ -1,0 +1,9 @@
+load("@rules_rust//rust:defs.bzl", "rust_binary")
+
+rust_binary(
+    name = "mlir_audit_tool",
+    srcs = ["src/main.rs"],
+    edition = "2021",
+    crate_root = "src/main.rs",
+    deps = [],
+)

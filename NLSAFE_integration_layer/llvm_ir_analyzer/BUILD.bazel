@@ -1,0 +1,9 @@
+load("@rules_rust//rust:defs.bzl", "rust_binary")
+
+rust_binary(
+    name = "llvm_ir_analyzer",
+    srcs = ["src/main.rs"],
+    edition = "2021",
+    crate_root = "src/main.rs",
+    deps = [],
+)
