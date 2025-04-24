@@ -1,0 +1,24 @@
+{
+  "id": "2023-04-24T10:15:30.123Z",
+  "events": [
+    {
+      "action": {
+        "completed": {
+          "outputs": [
+            {
+              "name": "//llvm_ir_analyzer:analyzer",
+              "digest": "sha256:1234567890abcdef1234567890abcdef1234567890abcdef1234567890abcdef"
+            },
+            {
+              "name": "//mlir_audit_tool:auditor",
+              "digest": "sha256:abcdef1234567890abcdef1234567890abcdef1234567890abcdef1234567890"
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "command_line": {
+    "args": ["build", "//..."]
+  }
+}
