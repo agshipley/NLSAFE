@@ -53,7 +53,7 @@ NLSAFE/
 │   ├── llvm_audit_output.txt     # Output of analyzer
 │   └── mlir_audit_output.txt     # Output of audit tool
 ├── provenance/
-│   └── transform_provenance.py   # Placeholder for SLSA JSON transformer
+│   └── transform_provenance.py   # Convert BEP + audit logs to SLSA JSON
 ├── docs/
 │   └── integration_with_nativelink.md  # Integration reference
 └── .github/
@@ -100,13 +100,17 @@ This integration layer prepares the foundation for secure, verifiable build infr
 - Supporting Sigstore signing of artifacts (future)
 - Tracking the full chain of custody via SLSA-compliant metadata
 
-See `provenance/transform_provenance.py` for a placeholder transformer that will eventually convert Bazel and audit metadata into structured SLSA JSON.
+Use `provenance/transform_provenance.py` to convert Bazel BEP output and audit logs into SLSA provenance JSON.
+### Generate SLSA Provenance
+```bash
+python provenance/transform_provenance.py --bep /path/to/bep.json --audit examples/llvm_audit_output.txt --audit examples/mlir_audit_output.txt --output provenance.json
+```
 
 ---
 
 ## 📌 Future Work
 
-- Add `bep_to_slsa` transformer: parse Bazel BEP + audit output into SLSA Provenance
+- Expand `bep_to_slsa` parsing with additional BEP fields
 - Add in-toto link generators around each audit step
 - Add `cosign` or `fulcio` Sigstore signing step
 - Integrate OpenTelemetry spans for trace-level observability
