@@ -5,6 +5,9 @@ use structopt::StructOpt;
 use serde::{Deserialize, Serialize};
 use serde_json::{Value, json};
 
+#[cfg(test)]
+mod test_sample;
+
 #[derive(Debug, StructOpt)]
 #[structopt(name = "bep-to-slsa", about = "Transform Bazel BEP data to SLSA provenance format")]
 struct Opt {
