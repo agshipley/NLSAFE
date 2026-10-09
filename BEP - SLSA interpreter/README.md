@@ -1,50 +1,38 @@
-# BEP to SLSA Transformer
+# BEP-to-SLSA provenance prototype
 
-This component transforms Bazel Build Event Protocol (BEP) data into SLSA (Supply-chain Levels for Software Artifacts) provenance format.
+A Rust command-line tool that reads Bazel Build Event Protocol (BEP) JSON and produces a **SLSA v0.2-style provenance JSON document**. This is a research component of [NLSAFE](../README.md), not a production provenance attestation service.
 
-## Overview
+## What it does
 
-The BEP to SLSA transformer is a critical part of the NLSAFE provenance system. It:
+The program parses build-event data and assembles a JSON envelope containing subject, builder, invocation, materials and metadata fields. The target is the **older v0.2 predicate format**; the project has not established conformance with newer SLSA provenance versions.
 
-1. Extracts build information from Bazel's BEP JSON output
-2. Transforms this data into the SLSA provenance format (v0.2)
-3. Generates a cryptographically verifiable record of how artifacts were built
+**Important boundary:** Emitting a JSON record does **not** cryptographically authenticate the record or establish artifact/build integrity. The repository does not provide a completed signing, verification, or trusted-builder chain. A digest carried in an output document should not be interpreted as an independently attested fact.
 
-## Usage
+## Repository layout and usage
 
-### Command Line
+- [Rust CLI and manifest](src/main.rs), [Cargo.toml](Cargo.toml)
+- [Example BEP input](example_bep.json)
+- [Legacy Bazel wrapper](scripts/generate_slsa_provenance.sh)
 
-```bash
-bazel run //provenance/bep_to_slsa:bep_to_slsa -- \
-  /path/to/bep.json \
-  /path/to/output/slsa-provenance.json \
-  --repo-url https://github.com/agshipley/NLSAFE \
-  --repo-digest <commit-hash>
-```
-
-### Integration Script
-
-For convenience, use the provided script:
+The Rust crate is located in this directory, which is named `BEP - SLSA interpreter` (including spaces). From the NLSAFE repository root, the intended direct invocation is:
 
 ```bash
-./scripts/generate_slsa_provenance.sh \
-  --bep /path/to/bep.json \
-  --output /path/to/output/slsa-provenance.json \
+cargo run --manifest-path "BEP - SLSA interpreter/Cargo.toml" -- \
+  "BEP - SLSA interpreter/example_bep.json" \
+  /tmp/nlsafe-provenance.json \
   --repo-url https://github.com/agshipley/NLSAFE \
-  --repo-digest <commit-hash>
+  --repo-digest YOUR_COMMIT_SHA
 ```
 
-## SLSA Provenance Format
+This is a documented invocation of the CLI argument interface, **not** a claim that the project has been build-tested or that the sample input produces valid cryptographic attestations.
 
-The generated SLSA provenance follows the [SLSA v0.2 specification](https://slsa.dev/provenance/v0.2) and includes:
+The accompanying `generate_slsa_provenance.sh` script invokes `//provenance/bep_to_slsa:bep_to_slsa`, a Bazel target path **not present in this repository layout**. It is retained as a legacy integration sketch, not a verified working quick start. The older documentation's link to `.github/workflows/generate-provenance.yml` was also stale; no such workflow is included in this repository.
 
-- Subject: The built artifacts and their digests
-- Builder: Information about the build system
-- Build Type: Identifies Bazel as the build system
-- Invocation: Details about how the build was invoked
-- Materials: Source code and dependencies used in the build
-- Metadata: Additional information about the build
+## What remains to be established
 
-## Integration with CI/CD
+- A verified mapping from real Bazel event streams to provenance subjects and materials.
+- Cryptographically authenticated build identity, artifact-digest binding, signing and verification.
+- Validation against an appropriate contemporary SLSA/in-toto specification.
+- An integrated, tested CI workflow with clear failure behavior.
 
-This tool is designed to be integrated into CI/CD pipelines. See `.github/workflows/generate-provenance.yml` for an example GitHub Actions workflow.
+See the [NLSAFE integration notes](../NLSAFE_integration_layer/docs/NLSAFE_integration_README.md) for the broader prototype architecture.
